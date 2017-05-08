@@ -2,13 +2,15 @@ package cn.bronzeware.muppet.websiterelease.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import cn.bronzeware.muppet.annotations.Column;
 import cn.bronzeware.muppet.annotations.Table;
-import cn.bronzeware.muppet.websiterelease.common.NetUtil;
 
 @Table(tablename="tb_user")
 public class User {
 
+	
 	@Column(columnname="user_id")
 	private String id;
 	
@@ -17,7 +19,6 @@ public class User {
 	
 	@Column(columnname="email")
 	private String email;
-	
 	
 	@Column(columnname="register_time")
 	private Date registerTime;
@@ -80,8 +81,9 @@ public class User {
 
 	
 
-	public String getRegisterIp() {
-		return NetUtil.ipConvert(registerIp);
+	public long getRegisterIp() {
+		//return NetUtil.ipConvert(registerIp);
+		return registerIp;
 	}
 
 	public void setRegisterIp(long registerIp) {

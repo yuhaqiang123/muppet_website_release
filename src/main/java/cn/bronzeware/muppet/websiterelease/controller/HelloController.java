@@ -1,6 +1,7 @@
 package cn.bronzeware.muppet.websiterelease.controller;
 
 import org.apache.log4j.Logger;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,11 +9,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import cn.bronzeware.core.ioc.annotation.Autowired;
+
 @Controller
 @RequestMapping("/muppet/hello")
 public class HelloController {
 	
 	private Logger logger = Logger.getRootLogger();
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
 	
 	@RequestMapping(value="/index/name/{name}/msg/{msg}",method=RequestMethod.POST)
 	public void index(@PathVariable String name

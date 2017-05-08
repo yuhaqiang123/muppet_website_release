@@ -1,4 +1,4 @@
-package cn.bronzeware.muppet.websiterelase.dao;
+package cn.bronzeware.muppet.websiterelease.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import cn.bronzeware.muppet.core.Session;
 import cn.bronzeware.muppet.core.SessionFactory;
 
-@Component
+
 public class BaseDaoSupport<T> {
 
 	@Autowired
@@ -21,11 +21,11 @@ public class BaseDaoSupport<T> {
 		return result;
 	}
 	
-	public boolean delete(T t){
+	public boolean deleteByPrimaryKey(T t){
 		Session session = sessionFactory.getSession();
-		boolean result = session.deleteByPrimaryKey(t);
+		//boolean result = session.deleteByPrimaryKey(t);
 		session.close();
-		return result;
+		return false;
 	}
 	
 	public boolean update(T t){
@@ -37,11 +37,12 @@ public class BaseDaoSupport<T> {
 		
 	}
 	
-	/*public T getById(Object primaryKey){
+	public T getById(Class clazz,Object primaryKey){
 		Session session = sessionFactory.getSession();
-		
-		
-	}*/
+		T t = (T) session.queryById(clazz, primaryKey);
+		session.close();
+		return t;
+	}
 	
 	
 }
