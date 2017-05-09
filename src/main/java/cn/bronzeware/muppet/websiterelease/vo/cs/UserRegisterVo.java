@@ -3,6 +3,7 @@ package cn.bronzeware.muppet.websiterelease.vo.cs;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -11,6 +12,16 @@ import cn.bronzeware.muppet.annotations.Column;
 
 public class UserRegisterVo {
 
+	
+	private long registerIp;
+
+	public long getRegisterIp() {
+		return registerIp;
+	}
+
+	public void setRegisterIp(long registerIp) {
+		this.registerIp = registerIp;
+	}
 
 	public String getNickName() {
 		return nickName;
@@ -35,11 +46,9 @@ public class UserRegisterVo {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-
 	
-	@Length(max=10, min=1, message="{user.nickName.length}")
-	@NotNull(message="{user.nickName.null}")
+	//@Length(max=10, min=1, message="{user.nickName.length}")
+	//@NotNull(message="{user.nickName.null}")
 	private String nickName;
 	
 	
@@ -56,6 +65,7 @@ public class UserRegisterVo {
 	/*@NotNull(message="user.registerIp.null")
 	private long registerIp;*/
 	
+	@Pattern(regexp="^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,10}$", message="user.password.unlegal")
 	@NotNull(message="{user.password.null}")
 	private String password;
 

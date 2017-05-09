@@ -12,6 +12,7 @@
 		<spring.version>4.2.6.RELEASE</spring.version>
 		<slf4j.version>1.6.6</slf4j.version>
 		<log4j.version>1.2.14</log4j.version>
+		<redis.version>2.9.0</redis.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -164,6 +165,13 @@
             <artifactId>hibernate-validator</artifactId>
             <version>5.3.4.Final</version>
         </dependency>
+        <dependency>
+    		<groupId>redis.clients</groupId>
+    		<artifactId>jedis</artifactId>
+    		<version>${redis.version}</version>
+		</dependency>
+        
+        
 
 	</dependencies>
 	<build>

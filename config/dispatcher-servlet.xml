@@ -16,7 +16,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 
 	<bean id="messageSource"
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-		<property name="basename" value="classpath:messages" />
+		<property name="basename" value="classpath:message/user" />
 		<property name="fileEncodings" value="utf-8" />
 		<property name="cacheSeconds" value="120" />
 	</bean>
@@ -38,6 +38,15 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 	<bean id="conversionService"
 		class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
 	</bean>
+
+	
+	
+	<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />  
+
+
+
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver" />
+
 
 
 	<context:annotation-config />
