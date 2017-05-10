@@ -1,12 +1,17 @@
 package cn.bronzeware.muppet.websiterelease.service;
 
+import java.nio.channels.SelectableChannel;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import cn.bronzeware.muppet.websiterelease.common.MS;
 import cn.bronzeware.muppet.websiterelease.common.Util;
 import cn.bronzeware.muppet.websiterelease.dao.UserDaoSupport;
 import cn.bronzeware.muppet.websiterelease.model.User;
@@ -27,6 +32,9 @@ public class UserServiceSupport implements UserService{
 
 	@Autowired
 	private Jedis jedis;
+	
+	@Autowired
+	private MS ms;
 	
 	private static final String validateCodeSuffix = "validateCode";
 	
@@ -64,7 +72,13 @@ public class UserServiceSupport implements UserService{
 	 * @return
 	 */
 	public boolean emailUnique(String email){
-		return true;
+		List<User> list = userDaoSupport.queryForObject(
+				"select email from tb_user where email = ?", new Object[]{email}, User.class);
+		if(list == null ||list.size()==0){
+			return true;
+		}else{
+			return false;
+		}
 	}
 	
 	
@@ -74,7 +88,7 @@ public class UserServiceSupport implements UserService{
 	 * 如果不存在,即注册用户.
 	 * 
 	 */
-	public boolean register(UserRegisterVo userVo) {
+	public Map<String, String> register(UserRegisterVo userVo) {
 		User user = new User();
 		user.setId(UUID.randomUUID().toString());
 		user.setEmail(userVo.getEmail());
@@ -84,16 +98,36 @@ public class UserServiceSupport implements UserService{
 		user.setRegisterTime(new Date(System.currentTimeMillis()));
 		user.setLastLoginTime(new Date(System.currentTimeMillis()));
 		user.setNickName(userVo.getEmail());
-		return userDaoSupport.add(user);
+		if(this.emailUnique(userVo.getEmail())){
+			return null;
+		}else{
+			Map<String, String> map = new HashMap<String, String>();
+			map.put("email", "user.register.email.existed");
+			return map;
+		}
 	}
 
 
 	/**
 	 * 登录服务
 	 */
-	public OnlineUserInfo login(UserLoginVo user) {
-		
-		return null;
+	public OnlineUserInfo login(UserLoginVo userVo) {
+		String password = userVo.getPassword();
+		String email = userVo.getEmail();
+		String encrptPassword = Util.encrptPassword(password);
+		String sql = "select * from tb_user where email = ? and encrpt_password = ?";
+		List<User> users  = userDaoSupport.queryForObject(sql, new Object[]{email , encrptPassword}, User.class);
+		if(users != null && users.size() > 0){
+			User user = users.get(0);
+			OnlineUserInfo info = new OnlineUserInfo();
+			info.setNickName(user.getNickName());
+			info.setUserId(user.getId());
+			info.setLoginTime(new Date(System.currentTimeMillis()));
+			info.setLoginIp(userVo.getLoginIp());
+			return info;
+		}else{
+			return null;
+		}
 	}
 
 }

@@ -1,16 +1,41 @@
 package cn.bronzeware.muppet.websiterelease.dao;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import cn.bronzeware.muppet.core.Session;
 import cn.bronzeware.muppet.core.SessionFactory;
+import cn.bronzeware.muppet.transaction.Transaction;
+import cn.bronzeware.muppet.transaction.TransactionExecute;
 
 
 public class BaseDaoSupport<T> {
 
 	@Autowired
 	protected SessionFactory sessionFactory;
+	
+	
+	public List<Map<String, Object>> queryForMap(String sql,Object[] params){
+		Session session = sessionFactory.getSession();
+		List<Map<String, Object>> results = session.query(sql, params);
+		session.close();
+		return results;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<T> queryForObject(final String sql, final Object[] params, final Class<T> clazz){
+		List<T> results = null;
+		results = (List) sessionFactory.transactionOperationCallback(new TransactionExecute() {
+			public Object execute(Session session, Transaction transaction) {
+				List<T> results = session.query(sql, params, clazz);
+				return results;
+			}
+		});
+		return results;
+	}
 	
 	
 	
