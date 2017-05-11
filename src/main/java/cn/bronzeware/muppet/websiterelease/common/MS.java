@@ -20,13 +20,15 @@ public class MS {
 	private String languageTag;
 	
 	public  String getMessage(String code, HttpServletRequest request){
+		return ms.getMessage(code, null, this.getLocale(request));
+	}
+	
+	public Locale getLocale(HttpServletRequest request){
 		RequestContext context = new RequestContext(request);
-		return ms.getMessage(code, null, context.getLocale());
+		return context.getLocale();
 	}
 	
 	public String getMessage(String code, Object[] params, HttpServletRequest request){
-		RequestContext context = new RequestContext(request);
-
-		return ms.getMessage(code, params, request.getLocale());
+		return ms.getMessage(code, params, this.getLocale(request));
 	}
 }
